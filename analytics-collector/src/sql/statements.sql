@@ -2,11 +2,11 @@ CREATE
 STREAM sessionstream (
 	type varchar,
   	anonymousID varchar,
-  	loadTime bigint,
-  	unloadTime bigint,
+  	loadTime varchar,
+  	unloadTime varchar,
   	language varchar,
   	platform varchar,
-  	port int,
+  	port varchar,
   	referer varchar,
   	location varchar,
   	href varchar,
@@ -25,3 +25,11 @@ SELECT anonymousID           as K,
        count(*)              AS events
 FROM sessionstream WINDOW TUMBLING (size 6 HOURS)
     GROUP BY anonymousID;
+
+CREATE TABLE PAGE_VIEWS AS
+    SELECT HREF,
+           COUNT(ANONYMOUSID) as USERS
+FROM SESSIONSTREAM
+    WINDOW TUMBLING (size 30 SECONDS)
+GROUP BY HREF
+    EMIT CHANGES;
