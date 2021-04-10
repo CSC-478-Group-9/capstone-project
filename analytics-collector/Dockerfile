@@ -1,17 +1,20 @@
-FROM node:14-alpine as base
+  
+FROM node:14-alpine as build
 
-WORKDIR /usr/src/app
-COPY package*.json /usr/src/app/
-EXPOSE 3000
+WORKDIR /usr/src/analytics-collector/
 
-FROM base as production
-ENV NODE_ENV=production
-RUN npm ci
-COPY . /usr/src/app/
-CMD ["node", "bin/www"]
+COPY package*.json /usr/src/analytics-collector/
 
-FROM base as dev
-ENV NODE_ENV=development
-RUN npm install -g nodemon && npm install
-COPY . /usr/src/app/
-CMD ["nodemon", "bin/www"]
+RUN  npm ci --silent
+
+COPY . .
+
+FROM node:14-alpine as dev
+
+WORKDIR /usr/src/analytics-collector/
+
+COPY --from=build /src/node_modules node_modules
+
+USER node
+
+CMD npm run dev
