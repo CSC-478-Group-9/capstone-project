@@ -15,9 +15,45 @@
 	<description>Analytics Dashboard</description>
 	<properties>
 		<java.version>14</java.version>
+		<ksqldb.version>0.15.0</ksqldb.version>
+		<!-- Maven properties for compilation -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
-	<dependencies>
 
+	<repositories>
+		<repository>
+			<id>ksqlDB</id>
+			<name>ksqlDB</name>
+			<url>https://ksqldb-maven.s3.amazonaws.com/maven/</url>
+		</repository>
+		<repository>
+			<id>confluent</id>
+			<name>Confluent</name>
+			<url>https://jenkins-confluent-packages-beta-maven.s3.amazonaws.com/6.2.0-beta201122193350-cp5/3/maven/</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-snapshots</id>
+			<url>https://repo.spring.io/snapshot</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<url>https://repo.spring.io/milestone</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>ksqlDB</id>
+			<url>https://ksqldb-maven.s3.amazonaws.com/maven/</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>confluent</id>
+			<url>https://jenkins-confluent-packages-beta-maven.s3.amazonaws.com/6.2.0-beta201122193350-cp5/3/maven/</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -57,6 +93,12 @@
 			<artifactId>spring-security-oauth2</artifactId>
 			<version>2.3.4.RELEASE</version>
 		</dependency>
+
+		<dependency>
+			<groupId>io.confluent.ksql</groupId>
+			<artifactId>ksqldb-api-client</artifactId>
+			<version>${ksqldb.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -65,7 +107,18 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<compilerArgs>
+						<arg>-Xlint:all</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>
