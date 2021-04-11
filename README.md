@@ -26,4 +26,4 @@ KSQL server will run on port 8088.
 
 Kafka Rest Proxy will run on port 8082.
 
-Analytics collector will run on port 3000.
+Analytics collector will run on port 4100.

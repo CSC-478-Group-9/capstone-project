@@ -122,14 +122,17 @@ services:
       KAFKA_REST_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
 
   analytics-collector:
+    image: analytics-collector
     build:
-      context: ./kafka
+      context: ./analytics-collector
       target: dev
     volumes:
-      - .:/usr/src/app
-    command: npm run start:dev
+      - ./analytics-collector:/usr/src/analytics-collector/
+      - nodemodules:/usr/src/analytics-collector/app/node_modules
     ports:
-      - "3000:3000"
+      - "4100:4100"
     environment:
       NODE_ENV: development
       DEBUG: analytics-collector:*
+volumes:
+  nodemodules: { }
