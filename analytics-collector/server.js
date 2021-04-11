@@ -4,13 +4,16 @@ const express = require('express');
 const {Kafka} = require('kafkajs');
 const config = require('./src/config/kafkaConnection');
 const bodyParser = require("body-parser");
+const cors = require('cors');
 
 // Constants
 const PORT = 4100;
 const HOST = '0.0.0.0';
 
+
 const app = express();
 app.use(bodyParser.json());
+app.options('/v1/track', cors());
 
 app.post('/v1/track', async (req, res) => {
     const message = req.body;
@@ -24,8 +27,6 @@ app.post('/v1/track', async (req, res) => {
             [{key: message.anonymousID, value: JSON.stringify(message)}],
     })
     res.json({status: "message sent"})
-
-    console.log('Message Received');
 });
 
 app.listen(PORT, HOST);

@@ -13,7 +13,7 @@ FROM node:14-alpine as dev
 
 WORKDIR /usr/src/analytics-collector/
 
-COPY --from=build /src/node_modules node_modules
+COPY --from=build /usr/src/analytics-collector/node_modules node_modules
 
 USER node
 
