@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/analytics-collector/analytics-collector.iml" filepath="$PROJECT_DIR$/analytics-collector/analytics-collector.iml" />
       <module fileurl="file://$PROJECT_DIR$/dashboard/analytics-dashboard.iml" filepath="$PROJECT_DIR$/dashboard/analytics-dashboard.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/capstone-project.iml" filepath="$PROJECT_DIR$/.idea/capstone-project.iml" />
-      <module fileurl="file://$PROJECT_DIR$/analytics-collector/kafka.iml" filepath="$PROJECT_DIR$/analytics-collector/kafka.iml" />
     </modules>
   </component>
 </project>
