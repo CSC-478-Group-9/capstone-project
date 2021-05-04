@@ -5,7 +5,7 @@ WORKDIR /usr/src/analytics-collector/
 
 COPY package*.json /usr/src/analytics-collector/
 
-RUN  npm ci --silent
+RUN  npm ci
 
 COPY . .
 

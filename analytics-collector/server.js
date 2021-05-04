@@ -13,12 +13,7 @@ const kafka = new Kafka(kafkaConfig);
 const producer = kafka.producer();
 
 const mysql = require('mysql');
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'me',
-    password: 'secret',
-    database: 'my_db'
-});
+const connection = mysql.createConnection('mysql://tracker:Qn@lyt1c5D@$b0@4d@165.232.159.45/analytics_dashboard');
 
 const HOST = '0.0.0.0';
 const app = express();
@@ -100,12 +95,9 @@ app.post('/v1/track',
             return res.status(400).json({errors: errors.array()});
         }
 
-
-        connection.connect();
-
-        connection.query('SELECT 1 FROM assets WHERE api_token = ?', [req.body.apiKey],async (error, row) => {
+        connection.query('SELECT 1 FROM assets WHERE api_token = ?', [req.body.apiKey], async (error, row) => {
             if (error) throw error;
-            if (row.length) {
+            if (row.length > 0) {
                 const message = req.body
 
                 try {
@@ -125,10 +117,9 @@ app.post('/v1/track',
                     res.status(500).json({[e.message]: e});
                 }
             } else {
-                res.status(500).json({"error": "Bad api key"});
+                res.status(401).json({"error": "Bad api key"});
             }
         });
-        connection.end();
     });
 
 app.listen(PORT, HOST);
