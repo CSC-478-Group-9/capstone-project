@@ -2,18 +2,17 @@
 
 const express = require('express');
 const {Kafka} = require('kafkajs');
+const mysql = require('mysql');
 const kafkaConfig = require('./src/config/kafkaConnection');
 const bodyParser = require("body-parser");
 const cors = require('cors');
-const {checkSchema, validationResult} = require('express-validator');
 
+const {checkSchema, validationResult} = require('express-validator');
 // Constants
 const PORT = 4100;
 const kafka = new Kafka(kafkaConfig);
-const producer = kafka.producer();
 
-const mysql = require('mysql');
-const connection = mysql.createConnection('mysql://tracker:Qn@lyt1c5D@$b0@4d@165.232.159.45/analytics_dashboard');
+const producer = kafka.producer();
 
 const HOST = '0.0.0.0';
 const app = express();
@@ -95,6 +94,12 @@ app.post('/v1/track',
             return res.status(400).json({errors: errors.array()});
         }
 
+        const connection = mysql.createConnection('mysql://tracker:Qn@lyt1c5D@$b0@4d@165.232.159.45/analytics_dashboard');
+
+        connection.connect((err) => {
+            if (err) console.error('error connecting: ' + err.stack);
+        });
+
         connection.query('SELECT 1 FROM assets WHERE api_token = ?', [req.body.apiKey], async (error, row) => {
             if (error) throw error;
             if (row.length > 0) {
@@ -119,6 +124,9 @@ app.post('/v1/track',
             } else {
                 res.status(401).json({"error": "Bad api key"});
             }
+        });
+        connection.end((err) => {
+            if (err) console.error('error terminating connection: ' + err.stack);
         });
     });
 
