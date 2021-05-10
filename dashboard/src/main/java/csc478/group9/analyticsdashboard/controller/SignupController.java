@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+
 @Controller()
 @RequestMapping("/signup")
 public class SignupController {
+
     private final UserService userService;
 
     public SignupController(UserService userService) {
@@ -19,7 +21,8 @@ public class SignupController {
     }
 
     @GetMapping()
-    public String signupView() {
+    public String signupView(@ModelAttribute User user, Model model){
+        model.addAttribute("user", new User());
         return "signup";
     }
 
@@ -27,10 +30,12 @@ public class SignupController {
     public String signupUser(@ModelAttribute User user, Model model) {
         String signupError = null;
 
-        if (!userService.isUsernameAvailable(user.getUsername())) {
-            signupError = "The username already exists.";
-        }
+        model.addAttribute("user", user);
 
+        if (!userService.isUsernameAvailable(user.getUsername())) {
+            model.addAttribute("signupError", signupError);
+            signupError = "The username "+ user.getUsername() + " already exists.";
+        }
         if (signupError == null) {
             int rowsAdded = userService.createUser(user);
             if (rowsAdded < 0) {
