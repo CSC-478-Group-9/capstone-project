@@ -1,0 +1,35 @@
+/**
+    This function returns a 32 bit unique api token to link an asset to its kafka tracking data
+    Usage: select get_api_token()
+**/
+
+CREATE FUNCTION get_api_token()
+RETURNS VARCHAR(32)
+DETERMINISTIC
+BEGIN
+    DECLARE token VARCHAR(32);
+
+SELECT
+   MAX(api_key) api_key into token
+FROM ( SELECT
+   left(md5(rand()), 32) AS api_key
+    union SELECT LEFT(MD5(RAND()), 32) api_key
+    union SELECT LEFT(MD5(RAND()), 32) api_key
+    union SELECT LEFT ( md5(rand()), 32 ) api_key
+    union SELECT LEFT ( md5(rand()), 32 ) api_key
+    union SELECT LEFT ( md5(rand()), 32 ) api_key
+    union SELECT LEFT ( md5(rand()), 32 ) api_key ) api_keys
+WHERE
+   NOT EXISTS (
+      SELECT
+         api_token
+      FROM
+         assets
+      WHERE
+         api_keys.api_key = assets.api_token
+   );
+
+
+ return ( token );
+
+ end

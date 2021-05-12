@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 public class UserService {
+
     private final UserMapper userMapper;
     private final HashService hashService;
 
@@ -27,10 +29,13 @@ public class UserService {
         random.nextBytes(salt);
         String encodedSalt = Base64.getEncoder().encodeToString(salt);
         String hashedPassword = hashService.getHashedValue(user.getPassword(), encodedSalt);
-        return userMapper.insert(new User(null, user.getUsername(), encodedSalt, hashedPassword, user.getFirstName(), user.getLastName()));
+        return userMapper.insert(new User(null, user.getUsername(), encodedSalt, hashedPassword, user.getFirstName(), user.getLastName(), user.getEmail()));
     }
 
     public User getUser(String username) {
         return userMapper.getUser(username);
+    }
+    public List<User> getAllUsers(){
+        return userMapper.getAllUsers();
     }
 }

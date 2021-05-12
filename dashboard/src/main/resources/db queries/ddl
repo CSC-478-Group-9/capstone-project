@@ -1,0 +1,56 @@
+CREATE  DATABASE analytics_dashboard;
+
+
+drop table assets;
+drop table users;
+
+
+CREATE TABLE users (
+   user_id     INTEGER NOT NULL auto_increment,
+   username    VARCHAR(254),
+   salt        VARCHAR(32),
+   password    VARCHAR(254),
+   firstname   VARCHAR(20),
+   lastname    VARCHAR(20),
+   unique (username),
+   primary key (user_id)
+);
+
+
+
+CREATE TABLE assets (
+   asset_id     INT,
+   username    VARCHAR(254),
+   api_token   VARCHAR(32),
+   asset_name   VARCHAR(128),
+   asset_url         VARCHAR(254),
+   asset_description         VARCHAR(254),
+   created     datetime,
+   updated     datetime,
+   PRIMARY KEY ( asset_id ),
+   FOREIGN KEY ( username )
+      REFERENCES users ( username )
+         ON DELETE CASCADE
+);
+
+ALTER TABLE assets MODIFY asset_id INTEGER NOT NULL AUTO_INCREMENT;
+
+-- sample asset -- can only execute after the associated user has been created through the application
+
+   INSERT INTO assets (
+      username,
+      api_token,
+      asset_name,
+      asset_url,
+      asset_description,
+      created,
+      updated
+   ) VALUES (
+      "muhirek@gmail.com",
+      "f1db5f3896f378fdd54b969fe2dc518e",
+      "muhire-kavuna.com",
+      "muhire-kavuna.com",
+      "Personal website",
+      now(),
+      now()
+   );

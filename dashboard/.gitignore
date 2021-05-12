@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/static/errors
+/src/main/resources/templates/troubleshooting.html
+/src/main/java/csc478/group9/analyticsdashboard/controller/TroubleshootingController.java
