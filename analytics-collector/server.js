@@ -11,7 +11,6 @@ const {checkSchema, validationResult} = require('express-validator');
 // Constants
 const PORT = 4100;
 const kafka = new Kafka(kafkaConfig);
-
 const producer = kafka.producer();
 
 const HOST = '0.0.0.0';
@@ -20,7 +19,7 @@ app.use(bodyParser.json());
 
 app.options('/v1/track', cors());
 
-app.post('/v1/track',
+app.post('/v1/track', /* Validate incoming JSON object against schema */
     checkSchema({
         type: {
             in: ['body'],
@@ -90,27 +89,33 @@ app.post('/v1/track',
         }
     }), (req, res) => {
         const errors = validationResult(req);
+        /* If schema validation fails, return 400 status and error array */
         if (!errors.isEmpty()) {
             return res.status(400).json({errors: errors.array()});
         }
 
+        // MariaDB connection config
         const connection = mysql.createConnection('mysql://tracker:Qn@lyt1c5D@$b0@4d@165.232.159.45/analytics_dashboard');
 
+        /* Attempt connection and if fails, throw error */
         connection.connect((err) => {
             if (err) console.error('error connecting: ' + err.stack);
         });
 
+        /* Return 1 from MariaDB if the API key exists, if fails, return status 401 */
         connection.query('SELECT 1 FROM assets WHERE api_token = ?', [req.body.apiKey], async (error, row) => {
             if (error) throw error;
             if (row.length > 0) {
                 const message = req.body
 
+                /* Attempt connection to Kafka Broker, if fails returns status 503 */
                 try {
                     await producer.connect()
                 } catch (e) {
                     res.sendStatus(503);
                 }
 
+                /* Attempt sending session object to sessions-01 topic in Kafka, if succeed return status 200, if fail, return status 500 and error. */
                 try {
                     await producer.send({
                         topic: 'sessions-01',
@@ -125,6 +130,7 @@ app.post('/v1/track',
                 res.status(401).json({"error": "Bad api key"});
             }
         });
+        /* close MariaDB connection*/
         connection.end((err) => {
             if (err) console.error('error terminating connection: ' + err.stack);
         });

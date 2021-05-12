@@ -1,3 +1,8 @@
 # Analytics Kafka Producer
-Usage `npm i && npm run start`
-Server starts on Port 8080.
+Local usage `npm i && npm run start`
+
+Server starts on port 4100.
+
+Docker Deployment `docker-compose up -d`
+
+Server starts on port 4100.

@@ -1,3 +1,4 @@
+// kafka connection properties
 module.exports = {
     clientId: 'lkc-xzkoz',
     kafka_topic: 'sessions-01',

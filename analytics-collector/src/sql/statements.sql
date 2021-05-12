@@ -1,3 +1,4 @@
+/* kSQL statments deployed on Confluent Cloud instance */
 CREATE
 STREAM sessionstream (
 	type varchar,
